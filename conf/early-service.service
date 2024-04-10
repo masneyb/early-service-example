@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: Apache-2.0
+
+[Unit]
+Description=Example Early Service on the Root Filesystem
+DefaultDependencies=no
+Before=sysinit.target
+IgnoreOnIsolate=yes
+
+[Service]
+User=early-service
+Group=early-service
+
+Type=exec
+# Note: The main socket is initially created by early-service-initrd.service.
+ExecStart=/usr/bin/early-service --server_socket_path ${RUNTIME_DIRECTORY}/early-service.sock --takeover_existing_socket
+Restart=always
+
+UMask=0007
+RuntimeDirectory=early-service
+RuntimeDirectoryMode=0750
+StateDirectory=early-service
+StateDirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target
