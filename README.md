@@ -96,6 +96,12 @@ services started in the initrd:
 - You can't leak references to any resources on the initrd, otherwise the kernel
   won't be able to free the memory allocated to the initrd when it is unmounted.
 
+- During the initrd to root transition, systemd deletes the contents of the
+  tmpfs filesystem containing the contents of the initrd. Your process started
+  from the initrd needs to open all of the necessary files before the switch
+  root operation happens. This also means that your process, and any associated
+  shared libraries, are running files that have been deleted.
+
 - The initrd is a cpio archive, and increasing the size of the initrd is going
   to increase the kernel boot time since it will need to uncompress and extract
   the larger cpio archive.
